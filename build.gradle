@@ -8,7 +8,12 @@
  */
 
 // Apply the java plugin to add support for Java
-apply plugin: 'java'
+//apply plugin: 'java'
+plugins {
+    id "java"
+    id "com.jfrog.bintray" version "1.0"
+}
+
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -27,4 +32,52 @@ dependencies {
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.11'
+}
+
+bintray {
+    user = project.getProperty('bintrayUser')
+    key = project.getProperty('bintrayApiKey')
+
+    //configurations = ['deployables'] //When uploading configuration files
+    // - OR -
+    //publications = ['mavenStuff'] //When uploading Maven-based publication files
+    // - AND/OR -
+    //filesSpec { //When uploading any arbitrary files ('filesSpec' is a standard Gradle CopySpec)
+    //    from 'arbitrary-files'
+    //    into 'standalone_files/level1'
+    //    rename '(.+)\\.(.+)', '$1-suffix.$2'
+    //}
+    dryRun = false //Whether to run this as dry-run, without deploying
+    publish = true //If version should be auto published after an upload
+    pkg {
+        repo = 'myrepo'
+        userOrg = 'myorg' //An optional organization name when the repo belongs to one of the user's orgs
+        name = 'myrepo_name'
+        desc = 'myrepo_desc'
+        websiteUrl = 'https://github.com/muga/sample-bintray/'
+        issueTrackerUrl = 'https://github.com/muga/sample-bintray/issues'
+        vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
+        licenses = ['Apache-2.0']
+        labels = []
+        publicDownloadNumbers = true
+        //attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
+        //Optional version descriptor
+        version {
+            name = '0.1.0' //Bintray logical version name
+            desc = 'sample 01'
+            released  = 'optional, date of the version release' //2 possible values: date in the format of 'yyyy-MM-dd'T'HH:mm:ss.SSSZZ' OR a java.util.Date instance
+            vcsTag = '0.1.0'
+            //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin'] //Optional version-level attributes
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                //passphrase = 'passphrase' //Optional. The passphrase for GPG signing'
+            }
+            mavenCentralSync {
+                sync = false //Optional (true by default). Determines whether to sync the version to Maven Central.
+                user = 'userToken' //OSS user token
+                password = 'paasword' //OSS user password
+                close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+            }
+        }
+    }
 }
