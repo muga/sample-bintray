@@ -42,9 +42,16 @@ artifacts {
     archives sourcesJar, javadocJar
 }
 
+group = 'muga'
+version = '0.1.0'
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version project.version
+
             if (plugins.hasPlugin('war')) {
                 from components.web
             } else {
@@ -57,6 +64,7 @@ publishing {
     }
 }
 
+// http://dl.bintray.com/muga/sample01-bintray/muga/sample-bintray/0.1.0/
 bintray {
     user = project.getProperty('bintrayUser')
     key = project.getProperty('bintrayApiKey')
@@ -73,9 +81,9 @@ bintray {
     dryRun = false //Whether to run this as dry-run, without deploying
     publish = true //If version should be auto published after an upload
     pkg {
-        repo = 'muga'
+        repo = 'sample01-bintray'
         //userOrg = '' //An optional organization name when the repo belongs to one of the user's orgs
-        name = 'sample-bintray'
+        name = 'Package01'
         desc = 'what a fantastic package indeed!'
         websiteUrl = 'https://github.com/muga/sample-bintray/'
         issueTrackerUrl = 'https://github.com/muga/sample-bintray/issues'
